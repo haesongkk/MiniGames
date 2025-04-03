@@ -3,6 +3,7 @@ using UnityEngine;
 public class Ball : MonoBehaviour
 {
     public float speed = 5f;
+	
     private Rigidbody2D rb;
 
     void Start()
@@ -10,7 +11,20 @@ public class Ball : MonoBehaviour
         rb = GetComponent<Rigidbody2D>();
         LaunchBall();
     }
-
+	
+	void Update()
+    {
+    }
+	
+	void OnTriggerEnter2D(Collider2D collision)
+    {
+        if (collision.CompareTag("DeadZone"))
+        {
+            Debug.LogWarning("공이 떨어졌습니다.");
+            //UnityEditor.EditorApplication.isPlaying = false;
+        }
+    }
+	
     void LaunchBall()
     {
         float rad = Random.Range(45f, 135f) * Mathf.Deg2Rad;
@@ -18,16 +32,12 @@ public class Ball : MonoBehaviour
         rb.linearVelocity = direction * speed;
     }
 
-    void OnTriggerEnter2D(Collider2D collision)
+    public void SpeedUp()
     {
-        if (collision.CompareTag("DeadZone"))
-        {
-            Debug.LogWarning("공이 떨어졌습니다.");
-            UnityEditor.EditorApplication.isPlaying = false;
-        }
+        speed *= 1.5f;
+        rb.linearVelocity = rb.linearVelocity.normalized * speed;
+        Debug.Log("스피드업! 현재속도 : " + speed);
     }
 
-    void Update()
-    {
-    }
+    
 }
